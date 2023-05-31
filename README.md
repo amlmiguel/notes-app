@@ -1,6 +1,7 @@
 # Notes App
 
-Notes App is a real-world Angular application that showcases a fully-functional CRUD (Create, Read, Update, Delete) system with an intuitive user interface and engaging animated elements. This project is designed to demonstrate the power and versatility of Angular by providing a practical example of building a robust application from scratch.
+Notes App is a real-world Angular application designed to solve the challenge of efficiently managing personal notes. With a clean user interface and animated elements, this project enables users to create, read, update, and delete notes with ease. By offering a digital solution for note-taking and organization, Notes App simplifies the process of managing information, providing a visually appealing and intuitive platform for users to store and organize their notes effectively.
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.11.
 ## Features
 

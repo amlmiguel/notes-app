@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { INotes } from 'src/app/INotes';
 import { Note } from 'src/app/shared/note.model';
 import { NotesService } from 'src/app/shared/notes.service';
 
@@ -11,7 +12,7 @@ import { NotesService } from 'src/app/shared/notes.service';
 })
 export class NoteDetailsComponent implements OnInit {
 
-  note: Note;
+  note: INotes;
   noteId: number;
   new: boolean;
   constructor(
@@ -23,11 +24,12 @@ export class NoteDetailsComponent implements OnInit {
   ngOnInit(): void {
     // we want find out if we are creating a new note or editing an existing one
     this.route.params.subscribe((params: Params) => {
-      this.note = new Note();
       if (params.id) {
-        this.note = this.notesService.get(params.id);
-        this.noteId = params.id;
-        this.new = false;
+        this.notesService.get(params.id).subscribe((note: INotes) => {
+          this.note = note;
+          this.noteId = params.id;
+          this.new = false;
+        });
     } else {
       this.new = true;
     }

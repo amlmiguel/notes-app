@@ -1,5 +1,6 @@
 import { style, trigger, transition, animate, query, stagger } from '@angular/animations';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { INotes } from 'src/app/INotes';
 import { Note } from 'src/app/shared/note.model';
 import { NotesService } from 'src/app/shared/notes.service';
 
@@ -78,109 +79,132 @@ import { NotesService } from 'src/app/shared/notes.service';
 })
 export class NotesListComponent implements OnInit {
 
-  notes: Note[] = new Array<Note>();
+  // notes: Note[] = new Array<Note>();
   filteredNotes: Note[] = new Array<Note>();
+  notes: INotes[];
 
   @ViewChild('filterInput') filterInputElRef: ElementRef<HTMLInputElement>;
 
   constructor(
-    private notesServices: NotesService
+    private notesService: NotesService
   ) { }
 
   ngOnInit(): void {
-    // we wanto to retrieve all notes from NotesServices
-    this.notes = this.notesServices.getAll();
+    // we want to retrieve all notes from NotesServices
+    this.get(1);
+    this.notesService.get(1);
     // this.filteredNotes = this.notesServices.getAll();
-    this.filter('');
+    // this.filter('');
+  }
+
+  get(id?) {
+
+    if (id) {
+      this.notesService.get(id).subscribe(
+        note => {
+          this.notes = [note]
+        }
+      );
+
+    } else {
+      this.notesService.getAll().subscribe(
+        notes => {
+          this.notes = notes
+        }
+      );
+
+    }
+
   }
 
   // tslint:disable-next-line: typedef
-  deleteNote(note: Note) {
-    const noteId = this.notesServices.getId(note);
-    this.notesServices.delete(noteId);
-    this.filter(this.filterInputElRef.nativeElement.value);
-  }
+  // deleteNote(note: Note) {
+  //   const noteId = this.notesServices.getId(note);
+  //   this.notesServices.delete(noteId);
+  //   this.filter(this.filterInputElRef.nativeElement.value);
+  // }
 
-  // tslint:disable-next-line: typedef
-  // tslint:disable-next-line: no-shadowed-variable
-  filter(query: string) {
-    query = query.toLowerCase().trim();
+  // // tslint:disable-next-line: typedef
+  // // tslint:disable-next-line: no-shadowed-variable
+  // filter(query: string) {
+  //   query = query.toLowerCase().trim();
 
-    let allResults: Note[] = new Array<Note>();
-    // split up the search query into individual words
-    let terms: string[] = query.split(' ');
-    // remove duplicate search terms
-    terms = this.removerDuplicates(terms);
-    // compile all relevant results into the allResults array
-    terms.forEach(term => {
-      const results = this.relevantNotes(term);
-      // append results to the allResults arra y
-      allResults = [...allResults, ...results];
-    });
-    // allResults will include duplicate notes
-    // because a particular note can be the result of many search terms
-    // but we dont want to show the same note multiple times on the UI
-    // so we first must remove the duplicates
+  //   let allResults: Note[] = new Array<Note>();
+  //   // split up the search query into individual words
+  //   let terms: string[] = query.split(' ');
+  //   // remove duplicate search terms
+  //   terms = this.removerDuplicates(terms);
+  //   // compile all relevant results into the allResults array
+  //   terms.forEach(term => {
+  //     const results = this.relevantNotes(term);
+  //     // append results to the allResults arra y
+  //     allResults = [...allResults, ...results];
+  //   });
+  //   // allResults will include duplicate notes
+  //   // because a particular note can be the result of many search terms
+  //   // but we dont want to show the same note multiple times on the UI
+  //   // so we first must remove the duplicates
 
-    const uniqueResults = this.removerDuplicates(allResults);
-    this.filteredNotes = uniqueResults;
+  //   const uniqueResults = this.removerDuplicates(allResults);
+  //   this.filteredNotes = uniqueResults;
 
-    // now sort by relevancy
-    this.sortByRelevancy(allResults);
-  }
+  //   // now sort by relevancy
+  //   this.sortByRelevancy(allResults);
+  // }
 
-  removerDuplicates(arr: Array<any>): Array<any> {
-    const uniqueResults: Set<any> = new Set<any>();
-    // loop through the input array and add the items to the set
-    arr.forEach(e => uniqueResults.add(e));
-    return Array.from(uniqueResults);
-  }
+  // removerDuplicates(arr: Array<any>): Array<any> {
+  //   const uniqueResults: Set<any> = new Set<any>();
+  //   // loop through the input array and add the items to the set
+  //   arr.forEach(e => uniqueResults.add(e));
+  //   return Array.from(uniqueResults);
+  // }
 
-  relevantNotes(query: string): Array<Note> {
-    query = query.toLowerCase().trim();
-    const relevantNotes = this.notes.filter(note => {
-      if (note.title && note.title.toLowerCase().includes(query)) {
-        return true;
-      }
-      if (note.body && note.body.toLowerCase().includes(query)) {
-        return true;
-      }
-      return false;
-    });
-    return relevantNotes;
-  }
+  // relevantNotes(query: string): any {
+  //   const notesList = this.get();
+  //   query = query.toLowerCase().trim();
+  //   const relevantNotes = this.notes.filter(note => {
+  //     if (note.title && note.title.toLowerCase().includes(query)) {
+  //       return true;
+  //     }
+  //     if (note.body && note.body.toLowerCase().includes(query)) {
+  //       return true;
+  //     }
+  //     return false;
+  //   });
+  //   return relevantNotes;
+  // }
 
-  // tslint:disable-next-line: typedef
-  sortByRelevancy(searchResults: Note[]){
-    // This method will calculate the relevancy of a note based on the number of times it appears in search result
+  // // tslint:disable-next-line: typedef
+  // sortByRelevancy(searchResults: Note[]){
+  //   // This method will calculate the relevancy of a note based on the number of times it appears in search result
 
-    const noteCountObj: Object = {}; // format - key: value => NoteId: number (note object id: count)
+  //   const noteCountObj: Object = {}; // format - key: value => NoteId: number (note object id: count)
 
-    searchResults.forEach(note => {
-      const noteId = this.notesServices.getId(note); // get the notes id
+  //   searchResults.forEach(note => {
+  //     const noteId = this.notesServices.getId(note); // get the notes id
 
-      if (noteCountObj[noteId]) {
-        noteCountObj[noteId]++;
-      } else {
-        noteCountObj[noteId] = 1;
-      }
-    });
+  //     if (noteCountObj[noteId]) {
+  //       noteCountObj[noteId]++;
+  //     } else {
+  //       noteCountObj[noteId] = 1;
+  //     }
+  //   });
 
-    this.filteredNotes = this.filteredNotes.sort((a: Note, b: Note) => {
-      const aId = this.notesServices.getId(a);
-      const bId = this.notesServices.getId(b);
+  //   this.filteredNotes = this.filteredNotes.sort((a: Note, b: Note) => {
+  //     const aId = this.notesServices.getId(a);
+  //     const bId = this.notesServices.getId(b);
 
-      const aCount = noteCountObj[aId];
-      const bCount = noteCountObj[bId];
+  //     const aCount = noteCountObj[aId];
+  //     const bCount = noteCountObj[bId];
 
-      return bCount - aCount;
-    });
-  }
+  //     return bCount - aCount;
+  //   });
+  // }
 
-  // tslint:disable-next-line: typedef
-  generateNoteURL(note: Note) {
-    const noteId = this.notesServices.getId(note);
-    return noteId;
-  }
+  // // tslint:disable-next-line: typedef
+  // generateNoteURL(note: Note) {
+  //   const noteId = this.notesServices.getId(note);
+  //   return noteId;
+  // }
 
 }

@@ -22,9 +22,9 @@ export class NotesService {
     return this.notes.indexOf(note)
   }
 
+  /* this method will add a note to the notes arrya and return the id of the note
+   where the id = index */
   add(note: Note) {
-    // this method will add a note to the notes arrya and return the id of the note
-    // where the id = index
     let newLength = this.notes.push(note);
     let index = newLength - 1;
     return index

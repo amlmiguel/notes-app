@@ -117,10 +117,10 @@ export class NotesListComponent implements OnInit {
       // append results to the allResults arra y
       allResults = [...allResults, ...results];
     });
-    // allResults will include duplicate notes
-    // because a particular note can be the result of many search terms
-    // but we dont want to show the same note multiple times on the UI
-    // so we first must remove the duplicates
+    /* allResults will include duplicate notes
+     because a particular note can be the result of many search terms
+     but we dont want to show the same note multiple times on the UI
+     so we first must remove the duplicates */
 
     const uniqueResults = this.removerDuplicates(allResults);
     this.filteredNotes = uniqueResults;
@@ -151,7 +151,7 @@ export class NotesListComponent implements OnInit {
   }
 
   // tslint:disable-next-line: typedef
-  sortByRelevancy(searchResults: Note[]){
+  sortByRelevancy(searchResults: Note[]) {
     // This method will calculate the relevancy of a note based on the number of times it appears in search result
 
     const noteCountObj: Object = {}; // format - key: value => NoteId: number (note object id: count)
